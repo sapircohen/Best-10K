@@ -1,0 +1,1122 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MwParserFromScratch</name>
+    </assembly>
+    <members>
+        <member name="T:MwParserFromScratch.InvalidParserStateException">
+            <summary>
+            Represents the parsing state of the parser is invalid. This exception indicates
+            that there might be a b&#117;g with the parser.  
+            </summary>
+            <remarks>
+            When you come across this exception, you may create an issue on this project's GitHub page,
+            attaching the original wikitext that suffered from this Exception, and the partial
+            call stack that raises the exception.
+            </remarks>
+        </member>
+        <member name="T:MwParserFromScratch.IWikitextLineInfo">
+            <summary>
+            Provides the starting position and ending position of a <see cref="T:MwParserFromScratch.Nodes.Node"/> with respect to the parsed wikitext string.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.IWikitextLineInfo.StartLineNumber">
+            <summary>
+            Gets the 0-based starting line number.
+            </summary>
+            <remarks>The current line number or 0 if no line information is available (for example, <see cref="P:MwParserFromScratch.IWikitextLineInfo.HasLineInfo"/> returns <c>false</c>).</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.IWikitextLineInfo.StartLinePosition">
+            <summary>
+            Gets the 0-based starting character position in the line.
+            </summary>
+            <remarks>The current line number or 0 if no line information is available (for example, <see cref="P:MwParserFromScratch.IWikitextLineInfo.HasLineInfo"/> returns <c>false</c>).</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.IWikitextLineInfo.EndLineNumber">
+            <summary>
+            Gets the 0-based ending line number.
+            </summary>
+            <remarks>The current line number or 0 if no line information is available (for example, <see cref="P:MwParserFromScratch.IWikitextLineInfo.HasLineInfo"/> returns <c>false</c>).</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.IWikitextLineInfo.EndLinePosition">
+            <summary>
+            Gets the 0-based exclusive starting character position in the line.
+            </summary>
+            <remarks>This is the starting index of the first character outside the node.
+            The current line number or 0 if no line information is available (for example, <see cref="P:MwParserFromScratch.IWikitextLineInfo.HasLineInfo"/> returns <c>false</c>).</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.IWikitextLineInfo.HasLineInfo">
+            <summary>
+            Gets a value indicating whether the class can return line information.
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.IWikitextParserLogger">
+            <summary>
+            Exposes methods to trace the behavior of <see cref="T:MwParserFromScratch.WikitextParser"/>.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.IWikitextParserLogger.NotifyFallback(System.Int32,System.Int32)">
+            <summary>
+            Called when a fallback in parsing has happened during parsing process.
+            </summary>
+            <param name="offset">Current character index, before falling back.</param>
+            <param name="contextStackSize">The size of context stack. This may reflect the depth of parsing.</param>
+        </member>
+        <member name="T:MwParserFromScratch.IWikitextParsingInfo">
+            <summary>
+            Provides extra information of parsing process.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.IWikitextParsingInfo.InferredClosingMark">
+            <summary>
+            Wether the closing mark of a template (}}) or an HTML tag (&lt;/ xxx&gt;) is implicitly
+            inferred by the wikitext parser.
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.MwParserUtility">
+            <summary>
+            Contains utility functions that might be handy for the wikitext parser.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.MwParserUtility.NormalizeTemplateArgumentName(MwParserFromScratch.Nodes.Node)">
+            <summary>
+            Normalizes a template argument name.
+            </summary>
+            <param name="argumentName">The argument name to be normalized.</param>
+            <returns>The normalized argument name, with leading and trailing whitespace removed,
+            or <c>null</c> if <see cref="!:argumentName"/> is <c>null</c>.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.MwParserUtility.NormalizeTemplateArgumentName(System.String)">
+            <summary>
+            Normalizes a template argument name.
+            </summary>
+            <param name="argumentName">The argument name to be normalized.</param>
+            <returns>The normalized argument name, with leading and trailing whitespace removed,
+            or <c>null</c> if <see cref="!:argumentName"/> is <c>null</c>.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.MwParserUtility.NormalizeTitle(MwParserFromScratch.Nodes.Node)">
+            <summary>
+            Normalizes a page title expression. This is a simple version; it simply treats the part before
+            the first colon mark as namesapce name. For a more complete version of title normalization,
+            including title validation and namespace / interwiki prefix check,
+            see WikiLink class in WikiClientLibrary package.
+            </summary>
+            <param name="title">The title to be normalized.</param>
+            <returns>The normalized argument name, with leading and trailing whitespace removed,
+            underscore replaced with space, starting with an upper-case letter.
+            Or <c>null</c> if <see cref="!:title"/> is <c>null</c>.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.MwParserUtility.NormalizeTitle(System.String)">
+            <summary>
+            Normalizes a page title expression. This is a simple version; it simply treats the part before
+            the first colon mark as namesapce name. For a more complete version of title normalization,
+            including title validation and namespace / interwiki prefix check,
+            see WikiLink class in WikiClientLibrary package.
+            </summary>
+            <param name="title">The title to be normalized.</param>
+            <returns>The normalized argument name, with leading and trailing whitespace removed,
+            underscore replaced with space, starting with an upper-case letter.
+            Or <c>null</c> if <see cref="!:title"/> is <c>null</c>.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.PlainText.EnumChildren">
+            <summary>
+            Infrastructure. Enumerates the children of this node.
+            </summary>
+            <returns>Always an empty sequence of nodes.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.PlainText.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.WikiLink.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.WikiLink.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.ExternalLink.Text">
+            <summary>
+            Display text of the link.
+            </summary>
+            <value>
+            Display text of the link, or <c>null</c>, if the link url is just surrounded by
+            a pair of square brackets. (e.g. <c>[http://abc.def]</c>).
+            </value>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.ExternalLink.Brackets">
+            <summary>
+            Whether the link is contained in square brackets.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.ExternalLink.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.ExternalLink.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.FormatSwitch">
+            <summary>
+            Represents wikitext with bold / italics.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.FormatSwitch.SwitchBold">
+            <summary>
+            Whether to switch font-bold of the incoming content.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.FormatSwitch.SwitchItalics">
+            <summary>
+            Whether to switch font-italics of the incoming content.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.FormatSwitch.EnumChildren">
+            <summary>
+            Infrastructure. Enumerates the children of this node.
+            </summary>
+            <returns>Always an empty sequence of nodes.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.FormatSwitch.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.Template">
+            <summary>
+            Represents all the template-like formations, including Variables and Parser Functions.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Template.Name">
+            <summary>
+            Title of the template page to transclude.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Template.IsMagicWord">
+            <summary>
+            Whether this node is a Variable or Parser Function.
+            This will affect how the first argument is rendered in wikitext.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Template.Arguments">
+            <summary>
+            Template arguments.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Template.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Template.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TemplateArgument.Name">
+            <summary>
+            Name of the argument.
+            </summary>
+            <value>Name of the argument, or <c>null</c> if the argument is anonymous.</value>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TemplateArgument.Value">
+            <summary>
+            Value of the argument.
+            </summary>
+            <value>Value of the argument. If the value is empty, it should be an empty <see cref="T:MwParserFromScratch.Nodes.Wikitext"/> instance.</value>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TemplateArgument.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TemplateArgument.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <summary>
+            Infrastructure. This function will always throw a <seealso cref="T:System.NotSupportedException"/>.
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.ArgumentReference">
+            <summary>
+            {{{name|defalut}}}
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.ArgumentReference.Name">
+            <summary>
+            Name of the argument.
+            </summary>
+            <value>Name of the argument.</value>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.ArgumentReference.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.ArgumentReference.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.TagStyle">
+            <summary>
+            Determines how a tag is rendered in wikitext.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.TagStyle.Normal">
+            <summary>
+            &lt;tag&gt;&lt;/tag&gt;
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.TagStyle.SelfClosing">
+            <summary>
+            &lt;tag /&gt;
+            </summary> 
+            <remarks><see cref="F:MwParserFromScratch.Nodes.TagStyle.SelfClosing"/> and <see cref="F:MwParserFromScratch.Nodes.TagStyle.NotClosed"/> have the same appearance in wikitext, but
+            some tags, such as br, hr, and wbr, is always self-closed so &lt;br /&gt; should be recognized as a
+            closed tag.</remarks>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.TagStyle.CompactSelfClosing">
+            <summary>
+            &lt;tag&gt;
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.TagStyle.NotClosed">
+            <summary>
+            &lt;tag&gt;...[EOF]
+            </summary>
+            <remarks><see cref="F:MwParserFromScratch.Nodes.TagStyle.SelfClosing"/> and <see cref="F:MwParserFromScratch.Nodes.TagStyle.NotClosed"/> have the same appearance in wikitext, but
+            the latter is for the tags that should be closed but actully not. This flag is used to reduce the chance
+            of fallbacks during parsing.</remarks>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.TagNode">
+            <summary>
+            &lt;tag attr1=value1&gt;content&lt;/tag&gt;
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagNode.Name">
+            <summary>
+            Name of the tag.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagNode.ClosingTagName">
+            <summary>
+            Name of the closing tag. It may have a different letter-case from <see cref="P:MwParserFromScratch.Nodes.TagNode.Name"/>.
+            </summary>
+            <value>The name of closing tag. OR <c>null</c> if it shares exactly the same content as <see cref="P:MwParserFromScratch.Nodes.TagNode.Name"/>.</value>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagNode.TagStyle">
+            <summary>
+            How a tag is rendered in wikitext.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagNode.ClosingTagTrailingWhitespace">
+            <summary>
+            The trailing whitespace for the closing tag.
+            </summary>
+            <exception cref="T:System.ArgumentException">The string contains non-white-space characters.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TagNode.GetContentPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <summary>
+            Gets the content inside the tags as plain text without the unprintable nodes
+            (e.g. comments, templates).
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TagNode.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TagNode.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TagNode.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.ParserTag">
+            <summary>
+            E.g. &lt;ref&gt;
+            </summary>
+            <remarks>
+            The MediaWiki software adds elements that look and act like XML tags.
+            Parser tags are included in MediaWiki whereas parser extension tags are added by optional software extensions.
+            </remarks>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.ParserTag.Content">
+            <summary>
+            Raw content of the tag.
+            </summary>
+            <value>Content of the tag, as string. If the tag is self-closing, the value is <c>null</c>.</value>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.ParserTag.TagStyle">
+            <summary>
+            Whether the tag is self closed. E.g. &lt;references /&gt;.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.ParserTag.GetContentString">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.ParserTag.GetContentPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.HtmlTag">
+            <summary>
+            Normal HTML tag, or other unrecognized tags. E.g. &lt;span&gt;
+            </summary>
+            <seealso cref="T:MwParserFromScratch.Nodes.ParserTag"/>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.HtmlTag.Content">
+            <summary>
+            Content of the tag.
+            </summary>
+            <value>Content of the tag, as <see cref="T:MwParserFromScratch.Nodes.Wikitext"/>. If the tag is self-closing, the value is <c>null</c>.</value>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.HtmlTag.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.HtmlTag.TagStyle">
+            <summary>
+            Whether the tag is self closed. E.g. &lt;references /&gt;.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.HtmlTag.GetContentString">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.HtmlTag.GetContentPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.ValueQuoteType">
+            <summary>
+            Describes how the value of an attribute should be quoted.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.ValueQuoteType.None">
+            <summary>
+            No quotes.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.ValueQuoteType.SingleQuotes">
+            <summary>
+            Value is surrounded by single quotes.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.ValueQuoteType.DoubleQuotes">
+            <summary>
+            Value is surrounded by double quotes.
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.TagAttribute">
+            <summary>
+            The attribute expression in a <see cref="T:MwParserFromScratch.Nodes.TagNode"/>. E.g. <c>mode=traditional</c>.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagAttribute.Quote">
+            <summary>
+            How the value is quoted. If <see cref="P:MwParserFromScratch.Nodes.TagAttribute.Value"/> is <c>null</c>,
+            this property is ignored.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagAttribute.LeadingWhitespace">
+            <summary>
+            The whitespace before the property expression.
+            </summary>
+            <exception cref="T:System.ArgumentException">The string contains non-white-space characters. OR The string is <c>null</c> or empty.</exception>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagAttribute.WhitespaceBeforeEqualSign">
+            <summary>
+            The whitespace before equal sign.
+            </summary>
+            <exception cref="T:System.ArgumentException">The string contains non-white-space characters.</exception>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagAttribute.WhitespaceAfterEqualSign">
+            <summary>
+            The whitespace after equal sign.
+            </summary>
+            <exception cref="T:System.ArgumentException">The string contains non-white-space characters.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TagAttribute.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TagAttribute.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Comment.EnumChildren">
+            <summary>
+            Infrastructure. Enumerates the children of this node.
+            </summary>
+            <returns>Always an empty sequence of nodes.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Comment.CloneCore">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Comment.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Comment.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.Node">
+            <summary>
+            Represents the abstract concept of a node in the syntax tree.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.AddAnnotation(System.Object)">
+            <summary>
+            Adds an object to the annotation list of this <see cref="T:MwParserFromScratch.Nodes.Node"/>.
+            </summary>
+            <param name="annotation">The annotation to add.</param>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.Annotation(System.Type)">
+            <summary>
+            Returns the first annotation object of the specified type from the list of annotations
+            of this <see cref="T:MwParserFromScratch.Nodes.Node"/>.
+            </summary>
+            <param name="type">The type of the annotation to retrieve.</param>
+            <returns>
+            The first matching annotation object, or null
+            if no annotation is the specified type.
+            </returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.Annotation``1">
+            <summary>
+            Returns the first annotation object of the specified type from the list of annotations
+            of this <see cref="T:MwParserFromScratch.Nodes.Node"/>.
+            </summary>
+            <typeparam name="T">The type of the annotation to retrieve.</typeparam>
+            <returns>
+            The first matching annotation object, or null if no annotation
+            is the specified type.
+            </returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.Annotations(System.Type)">
+            <summary>
+            Returns an enumerable collection of annotations of the specified type
+            for this <see cref="T:MwParserFromScratch.Nodes.Node"/>.
+            </summary>
+            <param name="type">The type of the annotations to retrieve.</param>
+            <returns>An enumerable collection of annotations for this XObject.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.Annotations``1">
+            <summary>
+            Returns an enumerable collection of annotations of the specified type
+            for this <see cref="T:System.Xml.Linq.XObject"/>.
+            </summary>
+            <typeparam name="T">The type of the annotations to retrieve.</typeparam>
+            <returns>An enumerable collection of annotations for this XObject.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.RemoveAnnotations(System.Type)">
+            <summary>
+            Removes the annotations of the specified type from this <see cref="T:MwParserFromScratch.Nodes.Node"/>.
+            </summary>
+            <param name="type">The type of annotations to remove.</param>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.RemoveAnnotations``1">
+            <summary>
+            Removes the annotations of the specified type from this <see cref="T:MwParserFromScratch.Nodes.Node"/>.
+            </summary>
+            <typeparam name="T">The type of annotations to remove.</typeparam>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.PreviousNode">
+            <summary>
+            The previous sibling node.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.NextNode">
+            <summary>
+            The next sibling node.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.ParentNode">
+            <summary>
+            The parent node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.EnumNextNodes">
+            <summary>
+            Enumerates the sibling nodes after this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.EnumDescendants">
+            <summary>
+            Enumerates the descendants of this node.
+            </summary>
+            <returns>A sequence of nodes, in document order.</returns>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.ParentCollection">
+            <summary>
+            The parent node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.InsertBefore(MwParserFromScratch.Nodes.Node)">
+            <summary>
+            Inserts a sibling node before the current node.
+            </summary>
+            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <c>null</c>.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:MwParserFromScratch.Nodes.Node.ParentNode"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">The type of <paramref name="node"/> is invalid for the container.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.InsertAfter(MwParserFromScratch.Nodes.Node)">
+            <summary>
+            Inserts a sibling node after the current node.
+            </summary>
+            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <c>null</c>.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:MwParserFromScratch.Nodes.Node.ParentNode"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">The type of <paramref name="node"/> is invalid for the container.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.Remove">
+            <summary>
+            Remove this node from its parent collection.
+            </summary>
+            <remarks>
+            To remove this node from its parent property (e.g. <see cref="P:MwParserFromScratch.Nodes.Template.Name"/>),
+            please set the property value to <c>null</c>.
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">This node is not attached to its parent via a collection.</exception>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.MwParserFromScratch#IWikitextLineInfo#StartLineNumber">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.MwParserFromScratch#IWikitextLineInfo#StartLinePosition">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.MwParserFromScratch#IWikitextLineInfo#EndLineNumber">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.MwParserFromScratch#IWikitextLineInfo#EndLinePosition">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.MwParserFromScratch#IWikitextLineInfo#HasLineInfo">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Node.MwParserFromScratch#IWikitextParsingInfo#InferredClosingMark">
+            <inheritdoc />
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.Clone">
+            <summary>
+            Makes a deep copy of the node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.ToPlainText">
+            <summary>
+            Gets the plain text without the unprintable nodes (e.g. comments, templates).
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Node.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <summary>
+            Gets the plain text without the unprintable nodes (e.g. comments, templates).
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.NodePlainTextOptions">
+            <summary>
+            Options used in <see cref="M:MwParserFromScratch.Nodes.Node.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)"/>.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.NodePlainTextOptions.None">
+            <summary>
+            Default behavior.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.Nodes.NodePlainTextOptions.RemoveRefTags">
+            <summary>
+            Remove the content of &lt;ref&gt; parser tags.
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.NodeCollection`1">
+            <summary>
+            Represents a collection of nodes.
+            The children are maintained as a bi-directional linked list.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.NodeCollection`1.FirstNode">
+            <summary>
+            The first node.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.NodeCollection`1.LastNode">
+            <summary>
+            The last node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.Add(`0)">
+            <summary>
+            Appends a new node into the children collection.
+            </summary>
+            <param name="node">The node to be added.</param>
+            <remarks>A clone of <paramref name="node"/> will be added into the children collection if the node has already attached to the syntax tree.</remarks>
+            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">The type of <paramref name="node"/> is invalid for the container.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.AddFirst(`0)">
+            <summary>
+            Appends a node to the head of the collection.
+            </summary>
+            <param name="node">The node to be added.</param>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.AddFrom(MwParserFromScratch.Nodes.NodeCollection{`0})">
+            <summary>
+            Adds nodes directly from source collection and clears source collection.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.Add(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Appends new nodes into the children collection.
+            </summary>
+            <param name="nodes">The nodes to be added.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="nodes"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">The type of a element in <paramref name="nodes"/> is invalid for the container.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.Reverse">
+            <summary>
+            Returns a reversed sequence of the collection items.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.GetEnumerator">
+            <summary>
+            返回一个循环访问集合的枚举器。
+            </summary>
+            <returns>
+            可用于循环访问集合的 <see cref="T:System.Collections.Generic.IEnumerator`1"/>。
+            </returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            返回一个循环访问集合的枚举器。
+            </summary>
+            <returns>
+            可用于循环访问集合的 <see cref="T:System.Collections.IEnumerator"/> 对象。
+            </returns>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.NodeCollection`1.System#Collections#Generic#ICollection{TNode}#Remove(`0)">
+            <summary>
+            Please use <see cref="M:MwParserFromScratch.Nodes.Node.Remove"/> instead.
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.Table">
+            <summary>
+            Wikitable.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TagAttributeCollection.TrailingWhitespace">
+            <summary>
+            The trailing whitespace after the last tag attribute.
+            </summary>
+            <exception cref="T:System.ArgumentException">The string contains non-white-space characters.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TagAttributeCollection.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.TemplateArgumentCollection">
+            <summary>
+            Represents a collection of <see cref="T:MwParserFromScratch.Nodes.TemplateArgument"/>,
+            which can be accessed via argument names.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TemplateArgumentCollection.EnumNameArgumentPairs">
+            <summary>
+            Enumerates the normalized name-<see cref="T:MwParserFromScratch.Nodes.TemplateArgument"/> pairs in the collection.
+            </summary>
+            <remarks>If there are arguments with duplicate names, they will nonetheless be included in the sequence.</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TemplateArgumentCollection.Item(System.String)">
+            <summary>
+            Gets an argument with the specified name.
+            </summary>
+            <param name="name">
+            The name of argument that will be tested. Can either be a name or 1-based index.
+            Leading and trailing white spaces will be ignored.
+            </param>
+            <exception cref="T:System.ArgumentNullException"><see cref="!:name"/> is <c>null</c>.</exception>
+            <returns>A matching <see cref="T:MwParserFromScratch.Nodes.TemplateArgument"/> with the specified name, or <c>null</c> if no matching template is found.</returns>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.TemplateArgumentCollection.Item(System.Int32)">
+            <summary>
+            Gets an argument with the specified positional argument index.
+            </summary>
+            <param name="name">
+            The index of argument that will be tested. Note that this index will not nessarily greater
+            or equal than 1, because there might exist template argument with the name such as "-1", which
+            can still be matched using this accessor.
+            </param>
+            <returns>A matching <see cref="T:MwParserFromScratch.Nodes.TemplateArgument"/> with the specified name, or <c>null</c> if no matching template is found.</returns>
+            <exception cref="T:System.ArgumentNullException"><see cref="!:name"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TemplateArgumentCollection.Contains(System.String)">
+            <summary>
+            Determines whether an argument with the specified name exists.
+            </summary>
+            <param name="name">
+            The name of argument that will be tested. Can either be a name or 1-based index.
+            Leading and trailing white spaces will be ignored.
+            </param>
+            <exception cref="T:System.ArgumentNullException"><see cref="!:name"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TemplateArgumentCollection.Contains(System.Int32)">
+            <summary>
+            Determines whether an argument with the specified positional argument index exists.
+            </summary>
+            <param name="name">
+            The index of argument that will be tested. Note that this index will not nessarily greater
+            or equal than 1, because there might exist template argument with the name such as "-1", which
+            can still be matched using this accessor.
+            </param>
+            <exception cref="T:System.ArgumentNullException"><see cref="!:name"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.TemplateArgumentCollection.SetValue(MwParserFromScratch.Nodes.Wikitext,MwParserFromScratch.Nodes.Wikitext)">
+            <summary>
+            Sets the value of the specified template argument. If the argument doesn't exist,
+            this function will create a new one and returns it.
+            </summary>
+            <param name="argumentName">The name of the argument to set.</param>
+            <param name="argumentValue">The new value of the argument. If the value is empty, it should be an empty <see cref="T:MwParserFromScratch.Nodes.Wikitext"/> instance.</param>
+            <returns>The <see cref="T:MwParserFromScratch.Nodes.TemplateArgument"/> whose value has been set/created.</returns>
+            <remarks>If there are multiple arguments sharing the same name, the value of the effective one (often the last one) will be set and returned.</remarks>
+            <exception cref="T:System.ArgumentNullException">Either <paramref name="argumentName"/> or <paramref name="argumentValue"/> is <c>null</c>.</exception>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.Wikitext">
+            <summary>
+            A multiline wikitext block.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Wikitext.EnumChildren">
+            <summary>
+            Enumerates the children of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Wikitext.ToString">
+            <summary>
+            Gets the wikitext representation of this node.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Wikitext.ToPlainText(MwParserFromScratch.Nodes.NodePlainTextOptions)">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.IInlineContainer.Inlines">
+            <summary>
+            Content of the inline container.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.InlineContainerExtensions.Prepend(MwParserFromScratch.Nodes.IInlineContainer,System.String)">
+            <summary>
+            Append a <see cref="T:MwParserFromScratch.Nodes.PlainText"/> node to the beginning of the paragraph.
+            </summary>
+            <param name="text">The text to be inserted.</param>
+            <returns>Either the new <see cref="T:MwParserFromScratch.Nodes.PlainText"/> node inserted, or the existing <see cref="T:MwParserFromScratch.Nodes.PlainText"/> at the beginning of the paragraph.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="text"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.InlineContainerExtensions.Append(MwParserFromScratch.Nodes.IInlineContainer,System.String)">
+            <summary>
+            Append a <see cref="T:MwParserFromScratch.Nodes.PlainText"/> node to the end of the paragraph.
+            </summary>
+            <param name="text">The text to be inserted.</param>
+            <returns>Either the new <see cref="T:MwParserFromScratch.Nodes.PlainText"/> node inserted, or the existing <see cref="T:MwParserFromScratch.Nodes.PlainText"/> at the end of the paragraph.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="text"/> is <c>null</c>.</exception>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.Run">
+            <summary>
+            A single-line (or multi-line) RUN.
+            </summary>
+            <remarks>
+            In some cases (e.g. the text of WIKILINK or the caption of TABLE), line-breaks are
+            allowed, but they will not be treated as paragraph breaks.
+            </remarks>
+        </member>
+        <member name="T:MwParserFromScratch.Nodes.LineNode">
+            <summary>
+            Represents nodes that should be written in a stand-alone block of lines in WIKITEXT.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.ListItem.Prefix">
+            <summary>
+            Prefix of the item.
+            </summary>
+            <remarks>The prefix consists of one or more *#:;, or is simply a space. For HR, the prefix is at least 4 dashes.</remarks>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.ListItem.ToString">
+            <summary>
+            Gets the wikitext representation of the node.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Heading.Level">
+            <summary>
+            Heading level.
+            </summary>
+            <value>
+            The level of the heading, which equals to the number of
+            equal signs (=) before or after the heading text.
+            The value is between 1 and 6.
+            </value>
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Heading.Suffix">
+            <summary>
+            The text after the heading expression.
+            E.g. <c>&lt;!--comment--&gt;</c> in <c>=== abc === &lt;!--comment--&gt;</c>.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Nodes.Heading.EnumChildren">
+            <inheritdoc />
+        </member>
+        <member name="P:MwParserFromScratch.Nodes.Paragraph.Compact">
+            <summary>
+            Whether to remove one trailing new-line, if possible.
+            </summary>
+            <remarks>
+            <para>There should be 2 new-line characters (\n\n) after a paragraph. But if the next line
+            is LIST_ITEM or HEADING, use 1 new-line character to end a paragraph is possible.</para>
+            <para>For the last paragraph in the <see cref="T:MwParserFromScratch.Nodes.Wikitext"/>, the expected number of new-line
+            characters decreases by 1. That is, 1 for normal, 0 for compact.</para>
+            <para>This property is <c>false</c> only if the last node of the paragraph is
+            <see cref="T:MwParserFromScratch.Nodes.PlainText"/>, and it ends with \n\s*. </para>
+            </remarks>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseWikitext">
+            <summary>
+            WIKITEXT
+            </summary>
+            <remarks>An empty WIKITEXT contains nothing. Thus the parsing should always be successful.</remarks>
+        </member>
+        <member name="F:MwParserFromScratch.ParserCore.EMPTY_LINE_NODE">
+            <summary>
+            Indicates the parsing is successful, but no node should be inserted to the list.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseLine(MwParserFromScratch.Nodes.LineNode)">
+            <summary>
+            Parses LINE.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseLineEnd(MwParserFromScratch.Nodes.LineNode)">
+            <summary>
+            Parses a PARAGRPAH_CLOSE .
+            </summary>
+            <param name="lastNode">The lastest parsed node.</param>
+            <returns>The extra paragraph, or <see cref="F:MwParserFromScratch.ParserCore.EMPTY_LINE_NODE"/>. If parsing attempt failed, <c>null</c>.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseListItem">
+            <summary>
+            LIST_ITEM
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseHeading">
+            <summary>
+            HEADING
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseCompactParagraph(MwParserFromScratch.Nodes.LineNode)">
+            <summary>
+            PARAGRAPH
+            </summary>
+            <remarks>The parsing operation will always succeed.</remarks>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseRun(MwParserFromScratch.ParserCore.RunParsingMode,MwParserFromScratch.Nodes.IInlineContainer,System.Boolean)">
+            <summary>
+            RUN
+            </summary>
+            <returns><c>true</c> if one or more nodes has been parsed.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParsePartialPlainText">
+            <summary>
+            PLAIN_TEXT
+            </summary>
+            <remarks>A PLAIN_TEXT contains at least 1 character.</remarks>
+        </member>
+        <member name="F:MwParserFromScratch.ParserCore.RunParsingMode.Run">
+            <summary>
+            Single line text.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.ParserCore.RunParsingMode.ExpandableText">
+            <summary>
+            Single line text with EXPANDABLE.
+            </summary>
+        </member>
+        <member name="F:MwParserFromScratch.ParserCore.RunParsingMode.ExpandableUrl">
+            <summary>
+            Single line URL with EXPANDABLE.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.NeedsTerminate(MwParserFromScratch.ParserCore.Terminator)">
+            <summary>
+            Looks ahead and checks whether to terminate the current matching.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.FindTerminator(System.Int32)">
+            <summary>
+            Looks ahead and checks where to terminate the PLAIN_TEXT matching.
+            </summary>
+            <returns>The index of the first character of the terminator.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.LookAheadToken(System.String)">
+            <summary>
+            Match the next token. This operation will not consume the tokens.
+            </summary>
+            <param name="tokenMatcher">A regular expression string used to match the next token.</param>
+            <returns>The string of token that has been successfully matched. OR <c>null</c> is such attempt failed.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ConsumeToken(System.String)">
+            <summary>
+            Attempts to consume the next token.
+            </summary>
+            <param name="tokenMatcher">A regular expression string used to match the next token.</param>
+            <returns>The string of token that has been successfully consumed. OR <c>null</c> is such attempt failed.</returns>
+        </member>
+        <member name="P:MwParserFromScratch.ParserCore.ParsingContext.OverridesTerminator">
+            <summary>
+            Whether to stop looking for terminators to the bottom of the stack.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParsingContext.ToString">
+            <summary>
+            返回表示当前对象的字符串。
+            </summary>
+            <returns>
+            表示当前对象的字符串。
+            </returns>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.Terminator.Search(System.String,System.Int32,MwParserFromScratch.IWikitextParserLogger)">
+            <summary>
+            Search for the index of the beginning of the terminator.
+            </summary>
+            <returns>Index of the beginning of the terminator. OR -1 if no such terminator is found.</returns>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseBraces">
+            <summary>
+            This function is intended to handle braces.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseArgumentReference">
+            <summary>
+            ARGUMENT_REF
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseTemplate">
+            <summary>
+            TEMPLATE
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.ParserCore.ParseTemplateArgument">
+            <summary>
+            TEMPLATE_ARG
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.Utility.NormalizeTitlePart(System.String,System.Boolean)">
+            <summary>
+            Normalizes part of title (either namespace name or page title, not both)
+            to its cannonical form. (Copied from WikiClientLibrary.)
+            </summary>
+            <param name="title">The title to be normalized.</param>
+            <param name="caseSensitive">Whether the title is case sensitive.</param>
+            <returns>
+            Normalized part of title. The underscores are replaced by spaces,
+            and when <paramref name="caseSensitive"/> is <c>true</c>, the first letter is
+            upper-case. Multiple spaces will be replaced with a single space. Lading
+            and trailing spaces will be removed.
+            </returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="title"/> is <c>null</c>.</exception>
+        </member>
+        <member name="T:MwParserFromScratch.WikitextParser">
+            <summary>
+            A parser that parses Wikitext into AST.
+            </summary>
+            <remarks>This class is thread-safe.</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParser.Options">
+            <summary>
+            The options, or <c>null</c> to use default options.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParser.Logger">
+            <summary>
+            A logger used to trace the process of parsing.
+            </summary>
+        </member>
+        <member name="M:MwParserFromScratch.WikitextParser.Parse(System.String)">
+            <summary>
+            Parses the specified Wikitext.
+            </summary>
+            <param name="wikitext">The wikitext to be parsed.</param>
+            <returns>A <see cref="T:MwParserFromScratch.Nodes.Wikitext"/> node containing the AST of the given Wikitext.</returns>
+            <exception cref="T:MwParserFromScratch.InvalidParserStateException">The parser state is invalid during the parsing process. There might be a b&#117;g with the parser.</exception>
+            <exception cref="T:System.OperationCanceledException">The parsing process has been cancelled.</exception>
+        </member>
+        <member name="M:MwParserFromScratch.WikitextParser.Parse(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Parses the specified Wikitext.
+            </summary>
+            <param name="wikitext">The wikitext to be parsed.</param>
+            <param name="cancellationToken">The token used to cancel the parsing operation.</param>
+            <returns>A <see cref="T:MwParserFromScratch.Nodes.Wikitext"/> node containing the AST of the given Wikitext.</returns>
+            <exception cref="T:MwParserFromScratch.InvalidParserStateException">The parser state is invalid during the parsing process. There might be a b&#117;g with the parser.</exception>
+            <exception cref="T:System.OperationCanceledException">The parsing process has been cancelled.</exception>
+        </member>
+        <member name="T:MwParserFromScratch.WikitextParserOptions">
+            <summary>
+            Used to specify the settings for <see cref="T:MwParserFromScratch.WikitextParser"/>.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParserOptions.ParserTags">
+            <summary>
+            Names of the parser tags. E.g. gallery .
+            Tag names are case-insensitive.
+            </summary>
+            <value>A list of strings, which are valid tag names. OR <c>null</c> to use the default settings.</value>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParserOptions.SelfClosingOnlyTags">
+            <summary>
+            Names of tags that can only be used in a self-closing way.
+            </summary>
+            <remarks>The default value is "br", "wbr", "hr".</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParserOptions.MagicTemplateNames">
+            <summary>
+            Names of the variables and parser functions in Wikitext. E.g. PAGENAME.
+            </summary>
+            <value>A list of strings, which are valid variable names. OR <c>null</c> to use the default settings.</value>
+            <remarks>See https://www.mediawiki.org/wiki/Help:Magic_words#Variables .</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParserOptions.AllowEmptyTemplateName">
+            <summary>
+            When parsing for template transclusions, allows empty template names.
+            </summary>
+            <remarks>For empty template names, the <see cref="P:MwParserFromScratch.Nodes.Template.Name"/> will be <c>null</c>.</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParserOptions.AllowEmptyWikiLinkTarget">
+            <summary>
+            When parsing for wikilinks, allows empty link targets.
+            </summary>
+            <remarks>For empty wikilink targets, the <see cref="P:MwParserFromScratch.Nodes.WikiLink.Target"/> will be <c>null</c>.</remarks>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParserOptions.AllowEmptyExternalLinkTarget">
+            <summary>
+            When parsing for external links, allows empty link targets.
+            </summary>
+            <remarks>
+            <para>For empty wikilink targets, the <see cref="P:MwParserFromScratch.Nodes.ExternalLink.Target"/> will be <c>null</c>.</para>
+            <para>It's recommended this property set to <c>false</c>.</para>
+            </remarks>
+        </member>
+        <member name="P:MwParserFromScratch.WikitextParserOptions.AllowClosingMarkInference">
+            <summary>
+            When parsing for wikilinks, templates, and HTML tags, allows inference of missing close marks.
+            </summary>
+        </member>
+        <member name="T:MwParserFromScratch.MagicTemplateNameInfo">
+            <summary>
+            An entry contains the name of a variable or a parser function,
+            and whether the name is case-sensitive.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.MagicTemplateNameInfo.Name">
+            <summary>
+            Name of the variable or parser function.
+            For parser functions, the value may start with #.
+            </summary>
+        </member>
+        <member name="P:MwParserFromScratch.MagicTemplateNameInfo.IsCaseSensitive">
+            <summary>
+            Whether the name is case-sensitive.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MediawikiSharp_API</name>
+    </assembly>
+    <members>
+        <member name="T:MediawikiSharp_API.JsonClasses.CategoryJsonClass">
+            <summary>
+            Class of Category Members, used in deserialize json string to c# object
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Rootobject">
+            <summary>
+            The root of json string
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Rootobject.batchcomplete">
+            <summary>
+            Batchcomplete
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Rootobject.limits">
+            <summary>
+            Limits
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Rootobject.query">
+            <summary>
+            Query
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Rootobject.Continue">
+            <summary>
+            Continue
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Continue">
+            <summary>
+            Class for continue string
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Continue.cmcontinue">
+            <summary>
+            The continue string
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Limits">
+            <summary>
+            Class for members count
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Limits.categorymembers">
+            <summary>
+            Count of members
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Query">
+            <summary>
+            Class for query
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Query.categorymembers">
+            <summary>
+            Array of Category Members
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Categorymember">
+            <summary>
+            Class for Category Member
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Categorymember.pageid">
+            <summary>
+            Page Id
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Categorymember.ns">
+            <summary>
+            Page ns
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.JsonClasses.CategoryJsonClass.Categorymember.title">
+            <summary>
+            Page title
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.LibraryClasses.ImageWiki">
+            <summary>
+            Class for wiki image
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.ImageWiki.Page">
+            <summary>
+            Page of section
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.ImageWiki.FileName">
+            <summary>
+            The name of file
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.ImageWiki.URL">
+            <summary>
+            The URL to file
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.ImageWiki.URL_Resize">
+            <summary>
+            The URL after resize to file
+            </summary>
+        </member>
+        <member name="M:MediawikiSharp_API.LibraryClasses.ImageWiki.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="fileName"></param>
+            <param name="url"></param>
+        </member>
+        <member name="M:MediawikiSharp_API.LibraryClasses.ImageWiki.Resize(System.UInt32)">
+            <summary>
+            Method that create url with given size
+            </summary>
+            <param name="size"></param>
+        </member>
+        <member name="T:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction">
+            <summary>
+            Instruction to control members in category
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.Sort">
+            <summary>
+            Sorting method
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.Sort.Ascending">
+            <summary>
+            Ascending sorting method
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.Sort.Descending">
+            <summary>
+            Descending sorting method
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers">
+            <summary>
+            Type of members
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers.Pages">
+            <summary>
+            Pages
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers.PagesSubcats">
+            <summary>
+            Pages and sub-categories
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers.PagesFiles">
+            <summary>
+            Pages and files
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers.PagesSubcatsFiles">
+            <summary>
+            Pages, sub-categories and files
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers.Subcats">
+            <summary>
+            Sub-categories
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers.SubcatsFiles">
+            <summary>
+            Sub-categories and files
+            </summary>
+        </member>
+        <member name="F:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers.Files">
+            <summary>
+            Files
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.LibraryClasses.QueryURLs">
+            <summary>
+            Class for quick access to the most important URLs in library
+            </summary>
+        </member>
+        <member name="M:MediawikiSharp_API.LibraryClasses.QueryURLs.GetMembersInCategoryURL(System.String,System.String,System.UInt32,System.String)">
+            <summary>
+            Method that return URL to get members in given category
+            </summary>
+            <param name="category"></param>
+            <param name="type"></param>
+            <param name="limit"></param>
+            <param name="sort"></param>
+            <returns>URL to get members in given category</returns>
+        </member>
+        <member name="T:MediawikiSharp_API.LibraryClasses.QueryURLs.PageContent">
+            <summary>
+            Class for URLs to get some page content
+            </summary>
+        </member>
+        <member name="M:MediawikiSharp_API.LibraryClasses.QueryURLs.PageContent.GetPageSections(System.String)">
+            <summary>
+            Get page section
+            </summary>
+            <param name="page"></param>
+            <returns>URL to get page sections</returns>
+        </member>
+        <member name="M:MediawikiSharp_API.LibraryClasses.QueryURLs.PageContent.GetPageSectionContent(System.String,System.String)">
+            <summary>
+            Get content of section
+            </summary>
+            <param name="page"></param>
+            <param name="sectionIndex"></param>
+            <returns>URL to get content of section</returns>
+        </member>
+        <member name="M:MediawikiSharp_API.LibraryClasses.QueryURLs.PageContent.GetPageImagesURL(System.String)">
+            <summary>
+            Get all images URLs in page
+            </summary>
+            <param name="page"></param>
+            <returns>URLs of all images in page</returns>
+        </member>
+        <member name="T:MediawikiSharp_API.LibraryClasses.Section">
+            <summary>
+            Class for page section
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.LibraryClasses.Section.Page">
+            <summary>
+            Page of section
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.LibraryClasses.Section.ParentSection">
+            <summary>
+            Parent for section
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.LibraryClasses.Section.Level">
+            <summary>
+            Level of nesting
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.LibraryClasses.Section.Title">
+            <summary>
+            Title of section
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.LibraryClasses.Section.Content">
+            <summary>
+            Content of section
+            </summary>
+        </member>
+        <member name="P:MediawikiSharp_API.LibraryClasses.Section.Images">
+            <summary>
+            Images in section
+            </summary>
+        </member>
+        <member name="T:MediawikiSharp_API.Mediawiki">
+            <summary>
+            For more informations/tutorial: https://www.mediawiki.org/wiki/API:Main_page
+            </summary>
+        </member>
+        <member name="M:MediawikiSharp_API.Mediawiki.#ctor(System.String)">
+            <summary>
+            For more informations/tutorial: https://www.mediawiki.org/wiki/API:Main_page
+            </summary>
+            <param name="language">Language of Wikipedia used to get data in this language. Can be set only in constructor.</param>
+            <exception cref="T:System.ArgumentException">Occured when language param is null, empty or white-spaces string.</exception>
+        </member>
+        <member name="M:MediawikiSharp_API.Mediawiki.GetMembersInCategoryAsync(System.String,MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers,System.UInt32,MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.Sort)">
+            <summary>
+            Method that allow to get the pages, files or/and sub-categories in the given category.
+            For more info: https://www.mediawiki.org/wiki/API:Categorymembers
+            </summary>
+            <param name="category">Which category to enumerate. Must include the "Category:" prefix. Should look eg. as: Category:Medicinal_plants, where "Category" should be noun in choosen in constructor language.</param>
+            <param name="typeOfCatMembers">Type of category members to include. Pages, Subcategories or Files. <see cref="T:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.TypeOfCatMembers"/></param>
+            <param name="limit">Count of items. Default is 500 but you can type more than it.</param>
+            <param name="sort">In which direction to sort. Default is ascending. <see cref="T:MediawikiSharp_API.LibraryClasses.MembersInCategoryInstruction.Sort"/></param>
+            <returns>List of pages title in category</returns>
+            <exception cref="T:System.Net.WebException">An error occurred while downloading the resource.</exception>
+            <exception cref="T:System.ArgumentException">And error occured when category param will be null, empty or white-spaces string.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">And error occured when limit param will be zero</exception>
+            <exception cref="T:System.Exception">Thrown when any others exception will occured</exception>
+        </member>
+        <member name="M:MediawikiSharp_API.Mediawiki.GetPageSectionsAsync(System.String)">
+            <summary>
+            Download all sections on the given page
+            </summary>
+            <param name="page">Title of page in choosen language</param>
+            <returns>List of sections <see cref="T:MediawikiSharp_API.LibraryClasses.Section"/></returns>
+            <exception cref="T:System.Net.WebException">An error occurred while downloading the resource.</exception>
+            <exception cref="T:System.ArgumentException">And error occured when page param will be null, empty or white-spaces string</exception>
+            <exception cref="T:System.Exception">Thrown when any others exception will occured</exception>
+        </member>
+        <member name="M:MediawikiSharp_API.Mediawiki.MatchImagesToSections(System.Collections.Generic.List{MediawikiSharp_API.LibraryClasses.Section}@,System.Collections.Generic.List{MediawikiSharp_API.LibraryClasses.ImageWiki})">
+            <summary>
+            Method maches images to secitons and resized them through WikiText instruction in section content.
+            </summary>
+            <param name="sections"><see cref="T:MediawikiSharp_API.LibraryClasses.Section"/></param>
+            <param name="images"><see cref="T:MediawikiSharp_API.LibraryClasses.ImageWiki"/></param>
+            <exception cref="T:System.ArgumentNullException">Sections and images params can not be null. </exception>
+            <exception cref="T:System.ArgumentException">Page of images must be same as Page of sections.</exception>
+            <exception cref="T:System.Exception">Thrown when any others exception will occured</exception>
+        </member>
+        <member name="M:MediawikiSharp_API.Mediawiki.GetImagesURLAsync(System.String)">
+            <summary>
+            Download images urls from page
+            </summary>
+            <param name="page">Title of page in choosen language</param>
+            <returns>List of images name and url. <see cref="T:MediawikiSharp_API.LibraryClasses.ImageWiki"/></returns>
+            <exception cref="T:System.ArgumentException">And error occured when page param will be null, empty or white-spaces string</exception>
+            <exception cref="T:System.Exception">Thrown when any others exception will occured</exception>
+        </member>
+        <member name="M:MediawikiSharp_API.Mediawiki.RequestConstructorAsync``1(System.String)">
+            <summary>
+            Method that allow contruct own request. For more information/tutorial: https://www.mediawiki.org/wiki/API:Main_page and https://www.mediawiki.org/wiki/Special:ApiSandbox
+            </summary>
+            <param name="request">Parameters are passed in query string. Remember the choosen language. <see cref="T:MediawikiSharp_API.LibraryClasses.QueryURLs"/></param>
+            <typeparam name="JsonClass">Json class matching json language received from Wikipedia. <see cref="N:MediawikiSharp_API.JsonClasses"/></typeparam>
+            <exception cref="T:System.Net.WebException">An error occurred while downloading the resource.</exception>
+            <exception cref="T:System.ArgumentException">And error occured when request param will be null, empty or white-spaces string</exception>
+            <exception cref="T:System.Exception">Occured when there is an error from Mediawiki api or any other</exception>
+        </member>
+    </members>
+</doc>
