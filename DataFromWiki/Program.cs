@@ -26,8 +26,8 @@ namespace DataFromWiki
             //USING LINQ-TO-WIKI
             //Downloader.LogDownloading = true;
             var wiki = new Wiki("LinqToWiki.Samples", "https://en.wikipedia.org", "/w/api.php");
-           
-
+            PageResultPageId(wiki);
+            
             //1. Read from execl Articles titles from excel fourth sheet.
             ExcelReader er = new ExcelReader(@"C:\Users\ספיר כהן\Desktop\כיוונים לרשת בויקיפדיה\Best 10K\DataFromWiki\MoviesNetwork.xlsx", 1);
             List<string> articles = er.ReadCell(5108,1);
@@ -55,6 +55,8 @@ namespace DataFromWiki
             }
 
             ew.Close();
+            //François Girard
+
         }
         //FOR LINQ-TO-WIKI (CONTROLLER FUNCTIONS)
 
@@ -62,12 +64,11 @@ namespace DataFromWiki
         private static List<PageInfo> PageResultProps(Wiki wiki, List<string> pageTitles)
         {
             List<PageInfo> pi = new List<PageInfo>();
-            
             //get info for all pages titles 
             foreach (var pageTitle in pageTitles)
             {
                 var pageInfo = wiki.Query.allpages().
-                Where(page => page.from == pageTitle.TrimEnd() && page.to == pageTitle.TrimEnd()).Pages.
+                Where(page => page.from == pageTitle.TrimEnd() && page.to==pageTitle.TrimEnd()).Pages.
                 Select(p => PageResult.Create(
                         p.info,
                         p.links().Select(s => s.title).ToList())
@@ -82,8 +83,25 @@ namespace DataFromWiki
                 }
             }
             return pi;
-        }        
-        
+        }
+        //getting pages id for the networks
+        private static List<PageInfo> PageResultPageId(Wiki wiki)
+        {
+            List<PageInfo> pi = new List<PageInfo>();
+            string pageTitle = "François Girard";
+            var pageInfo = wiki.Query.allpages().
+            Where(page => page.from == pageTitle.TrimEnd() && page.to == pageTitle.TrimEnd()).Pages.
+            Select(p => p.info);
+
+            var pageInfo2 = pageInfo.ToEnumerable().ToArray();
+            if (pageInfo2.Length >= 1)
+            {
+                //PageInfo article = new PageInfo((long)pageInfo2[0].Info.pageid, pageInfo2[0].Info.title, pageInfo2[0].Data.ToList());
+                //pi.Add(article);
+            }
+            return pi;
+        }
+
         private static void CheckEdges(List<PageInfo> pages, List<string> vertecies)
         {
             foreach (PageInfo page in pages)
