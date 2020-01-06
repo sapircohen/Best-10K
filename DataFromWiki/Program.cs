@@ -18,8 +18,6 @@ namespace DataFromWiki
     {
         static void Main(string[] args)
         {
-
-
             //DATA about popular pages taken from: https://en.wikipedia.org/wiki/Wikipedia:Multiyear_ranking_of_most_viewed_pages#Sources
             //and from: http://wikirank-2018.di.unimi.it/faq.html
 
